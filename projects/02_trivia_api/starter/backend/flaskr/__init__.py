@@ -26,7 +26,7 @@ def create_app(test_config=None):
     return response
 
 
-  def paginate(collection, page=1, count=QUESTIONS_PER_PAGE):
+  def paginate(request, collection, count=QUESTIONS_PER_PAGE):
     '''
     This is a helper function to paginate any collection returning a single page of items
 
@@ -35,6 +35,7 @@ def create_app(test_config=None):
     page (int): an integer indicating the number of the page requested (returns first page if not provided)
     count (int): number of items to be returned (currently set to a default of 10)
     '''
+    page = request.args.get('page', default=1, type=int)
     start = (page-1) * count
     end = start + count
     return collection[start:end]
@@ -52,8 +53,8 @@ def create_app(test_config=None):
     if not categories:
       abort(404)
 
-    page = request.args.get('page', default=1, type=int)
-    paginated_categories = paginate(categories, page)
+
+    paginated_categories = paginate(request, categories)
 
     if not paginated_categories:
       abort(404)
@@ -61,7 +62,7 @@ def create_app(test_config=None):
     return jsonify({
         "success": True,
         "categories": [category.format() for category in paginated_categories],
-      })
+      }), 200
 
   '''
   @TODO:
