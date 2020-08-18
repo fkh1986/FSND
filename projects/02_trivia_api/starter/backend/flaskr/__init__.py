@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from flask_cors import CORS
 import random
 
