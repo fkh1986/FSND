@@ -61,7 +61,7 @@ def create_app(test_config=None):
 
     return jsonify({
         "success": True,
-        "categories": [category.format() for category in paginated_categories],
+        "categories": {category.id: category.type.lower() for category in paginated_categories},
       }), 200
 
   '''
