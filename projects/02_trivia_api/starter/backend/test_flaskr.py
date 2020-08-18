@@ -43,6 +43,23 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['categories'])
         self.assertTrue(len(data['categories']))
 
+    def test_get_questions(self):
+        res = self.client().get('/questions')
+        data = json.loads(res.data)
+
+        questions = Question.query.all()
+        categories = Category.query.all()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(len(data['questions']) <= 10)
+        self.assertTrue(data['total_questions'])
+        self.assertEqual(data['total_questions'], len(questions))
+        self.assertTrue(data['current_category'])
+        self.assertTrue(data['categories'])
+        self.assertEqual(len(data['categories']), len(categories))
+
     def test_get_category_questions(self):
         res = self.client().get('/categories/1/questions')
         data = json.loads(res.data)
