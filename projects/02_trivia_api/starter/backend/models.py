@@ -3,10 +3,14 @@ from sqlalchemy import Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 
+db_user = os.environ.get('DB_USER')
+db_password = os.environ.get('DB_PASS')
 database_name = "trivia"
-database_path = "postgres://{}:{}@{}/{}".format('test', 'test', 'localhost:5432', database_name)
+database_path = "postgres://{}:{}@{}/{}".format(db_user, db_password, 'localhost:5432', database_name)
 
 db = SQLAlchemy()
+
+secret_key = os.environ.get('SECRET_KEY')
 
 '''
 setup_db(app)
@@ -15,6 +19,7 @@ setup_db(app)
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SECRET_KEY"] = secret_key
     db.app = app
     db.init_app(app)
     db.create_all()
