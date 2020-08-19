@@ -137,7 +137,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": True,
             "question_id": question.id,
-        })
+        }), 200
 
 
     '''
@@ -157,10 +157,14 @@ def create_app(test_config=None):
         '''
 
         question_data = request.json
-        question = request.json['question']
-        answer = request.json['answer']
-        difficulty = request.json['difficulty']
-        category = request.json['category']
+        question = question_data.get('question')
+        answer = question_data.get('answer')
+        difficulty = question_data.get('difficulty')
+        category = question_data.get('category')
+
+        # Raise Bad Request if request body is missing the required data
+        if not all([question, answer, difficulty, category]):
+            abort(400)
 
         try:
             new_question = Question(question, answer, category, difficulty)
@@ -171,7 +175,7 @@ def create_app(test_config=None):
 
         return jsonify({
             "success": True,
-        })
+        }), 200
 
 
     '''
@@ -268,15 +272,15 @@ def create_app(test_config=None):
         if not all(key in data for key in ['quiz_category', 'previous_questions']):
             abort(400)
 
-        previous_questions = data['previous_questions']
-        quiz_category = data['quiz_category']
+        previous_questions = data.get('previous_questions')
+        quiz_category = data.get('quiz_category')
 
         try:
             # Filter out all previously used questions
             possible_questions = Question.query.filter(Question.id.notin_(previous_questions))
 
             # Filter only questions from the selected category if not ALL categories is selected
-            if quiz_category['id'] != 0:
+            if quiz_category.get('id') != 0:
                 possible_questions = possible_questions.filter(Question.category == quiz_category['id'])
 
             # Randomize the returned question to allow for variation in quizzes
@@ -291,7 +295,7 @@ def create_app(test_config=None):
             "success": True,
             "previous_questions": previous_questions,
             "question": next_question,
-        })
+        }), 200
 
     '''
     @TODO:
