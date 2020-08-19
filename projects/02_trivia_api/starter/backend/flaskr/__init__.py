@@ -188,7 +188,7 @@ def create_app(test_config=None):
     only question that include that string within their question.
     Try using the word "title" to start.
     '''
-    @app.route('/search', methods=['POST'])
+    @app.route('/questions/search', methods=['POST'])
     def search_questions():
         '''
         Retrieves all questions that containts the search term
@@ -260,7 +260,7 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not.
     '''
-    @app.route('/quizzes', methods=['POST'])
+    @app.route('/quizzes/play', methods=['POST'])
     def play_quiz():
         '''
         Starts a quiz
