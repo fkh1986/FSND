@@ -223,7 +223,6 @@ def create_app(test_config=None):
       }), 200
 
 
-
   '''
   @TODO:
   Create a POST endpoint to get questions to play the quiz.
@@ -235,6 +234,35 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not.
   '''
+  @app.route('/quizzes', methods=['POST'])
+  def play_quiz():
+
+    data = request.json
+
+    if not all(key in data for key in ['quiz_category', 'previous_questions']):
+      abort(400)
+
+    previous_questions = data['previous_questions']
+    quiz_category = data['quiz_category']
+
+    try:
+      possible_questions = Question.query.filter(Question.id.notin_(previous_questions))
+
+      if quiz_category['id'] != 0:
+        possible_questions = possible_questions.filter(Question.category == quiz_category['id'])
+
+      next_question = possible_questions.order_by(func.random()).first()
+
+      next_question = next_question.format() if next_question else None
+
+    except:
+      abort(422)
+
+    return jsonify({
+        "success": True,
+        "previous_questions": previous_questions,
+        "question": next_question,
+      })
 
   '''
   @TODO:
