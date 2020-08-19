@@ -37,7 +37,9 @@ class TriviaTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Executed after reach test"""
-        pass
+        with self.app.app_context():
+            self.db.session.rollback()
+            self.db.session.close()
 
     """
     TODO
