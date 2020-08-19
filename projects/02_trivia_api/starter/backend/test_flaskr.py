@@ -25,12 +25,12 @@ class TriviaTestCase(unittest.TestCase):
             # create all tables
             self.db.create_all()
 
-        self.new_question = {
-            "question": "How many colors are there in the rainbow?",
-            "answer": "7 colors",
-            "category": 1,
-            "difficulty": 1,
-        }
+            self.new_question = {
+                "question": "How many colors are there in the rainbow?",
+                "answer": "7 colors",
+                "category": 1,
+                "difficulty": 1,
+            }
 
     def tearDown(self):
         """Executed after reach test"""
@@ -111,8 +111,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_play_quiz(self):
         quiz_info = {
-            'previous_questions': [],
-            'quiz_category': {"id": 0, "type": "all"},
+        'previous_questions': [],
+        'quiz_category': {"id": 0, "type": "all"},
         }
         res = self.client().post('/quizzes', json=quiz_info)
         data = json.loads(res.data)
