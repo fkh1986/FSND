@@ -109,6 +109,21 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['questions'])
         self.assertEqual(len(data['questions']), len(questions))
 
+    def test_play_quiz(self):
+        quiz_info = {
+            'previous_questions': [],
+            'quiz_category': {"id": 0, "type": "all"},
+        }
+        res = self.client().post('/quizzes', json=quiz_info)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['previous_questions'], quiz_info['previous_questions'])
+        self.assertTrue(data['question'])
+        self.assertTrue(data['question']['id'] not in quiz_info['previous_questions'])
+
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
     unittest.main()
