@@ -152,7 +152,7 @@ class TriviaTestCase(unittest.TestCase):
         search_term = 'title'
         questions = Question.query.filter(Question.question.ilike('%{}%'.format(search_term))).all()
 
-        res = self.client().post('/search', json={'searchTerm':search_term})
+        res = self.client().post('/questions/search', json={'searchTerm':search_term})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -160,7 +160,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(len(data['questions']), len(questions))
 
     def test_400_search_questions(self):
-        res = self.client().post('/search', json={'wrongDataKey':'fail'})
+        res = self.client().post('/questions/search', json={'wrongDataKey':'fail'})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 400)
@@ -172,7 +172,7 @@ class TriviaTestCase(unittest.TestCase):
         'previous_questions': [],
         'quiz_category': {"id": 0, "type": "all"},
         }
-        res = self.client().post('/quizzes', json=quiz_info)
+        res = self.client().post('/quizzes/play', json=quiz_info)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -185,7 +185,7 @@ class TriviaTestCase(unittest.TestCase):
         missing_quiz_info = {
             'previous_questions': [20],
         }
-        res = self.client().post('/quizzes', json=missing_quiz_info)
+        res = self.client().post('/quizzes/play', json=missing_quiz_info)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
